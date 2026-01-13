@@ -7,7 +7,7 @@
 
 [Script]
 # 定时签到：每天 00:08 执行
-cron "0 2 * * *" script-path=https://raw.githubusercontent.com/cmkachun/chamshare/main/chamshare_sign.js, tag=昌宜云选自动签到
+cron "8 0 * * *" script-path=https://raw.githubusercontent.com/cmkachun/chamshare/main/chamshare_sign.js, tag=昌宜云选自动签到
 
 # 获取 Token：手动签到时触发
 http-request ^https:\/\/api\.crm\.chamshare\.cn\/daySign script-path=https://raw.githubusercontent.com/cmkachun/chamshare/main/chamshare_get_cookie.js, tag=昌宜云选抓包
