@@ -1,5 +1,5 @@
 /**
- * @fileoverview 昌宜云选 自动签到
+ * @fileoverview 昌宜云选 自动签到 (修正版)
  */
 
 const token = $persistentStore.read("chamshare_token");
@@ -29,17 +29,23 @@ if (!token) {
             console.log("📝 昌宜云选返回结果: " + data);
             try {
                 const res = JSON.parse(data);
-                // 200 为签到成功
+                
+                // 1. 签到成功 (根据标准 code 200 判断)
                 if (res.code === 200) {
                     const pointInfo = res.data && res.data.point ? `获得积分: ${res.data.point}` : "签到成功";
                     $notification.post("昌宜云选", "✅ 成功", pointInfo);
                 } 
-                // 400 往往代表已签到
-                else if (res.code === 400 || (res.message && res.message.includes("已签到"))) {
+                // 2. 已签到判断 (修正点：增加对 code 1101 和 res.msg 的判断)
+                else if (res.code === 1101 || res.code === 400 || (res.msg && res.msg.includes("已签到"))) {
                     console.log("昌宜云选：今日已签到，跳过通知");
                 } 
+                // 3. Token 失效判断
+                else if (res.code === 401 || (res.msg && res.msg.includes("登录"))) {
+                    $notification.post("昌宜云选", "⚠️ Token 已失效", "请重新打开小程序获取");
+                }
+                // 4. 其他错误
                 else {
-                    $notification.post("昌宜云选", "⚠️ 失败", res.message || "未知错误");
+                    $notification.post("昌宜云选", "⚠️ 失败", res.msg || res.message || "未知错误");
                 }
             } catch (e) {
                 console.log("❌ 解析异常: " + e);
