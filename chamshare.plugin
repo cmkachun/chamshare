@@ -1,13 +1,16 @@
 #!name=昌宜云选自动签到
-#!desc=支持昌宜云选自动签到。点击“配置参数”可设置时间。
+#!desc=支持昌宜云选小程序自动签到。手动进入小程序签到页面即可自动获取 Token。
 #!author=cmkachun
 #!homepage=https://github.com/cmkachun/chamshare
 #!icon=https://raw.githubusercontent.com/luestr/IconSet/master/AppIcon/Chamshare.png
-#!arguments={"time":{"title":"签到时间","defaultValue":"08 00 * * *","type":"string","desc":"格式: 分 时 日 月 周"}}
+#!date=2026-01-15 10:00:00
 
 [Script]
-cron "{time}" script-path=https://raw.githubusercontent.com/cmkachun/chamshare/main/chamshare_sign.js,tag=昌宜云选自动签到
-http-request ^https:\/\/api\.crm\.chamshare\.cn\/daySign script-path=https://raw.githubusercontent.com/cmkachun/chamshare/main/chamshare_get_cookie.js,tag=昌宜云选抓包
+# 定时签到：每天 00:08 执行
+cron "8 0 * * *" script-path=https://raw.githubusercontent.com/cmkachun/chamshare/main/chamshare_sign.js, tag=昌宜云选自动签到
+
+# 获取 Token：手动签到时触发
+http-request ^https:\/\/api\.crm\.chamshare\.cn\/daySign script-path=https://raw.githubusercontent.com/cmkachun/chamshare/main/chamshare_get_cookie.js, tag=昌宜云选抓包
 
 [MITM]
 hostname = api.crm.chamshare.cn
